@@ -138,7 +138,7 @@
         cylinder.rotation.x = -1.57;;
 
         // 平面を作成
-        var geometry = new THREE.PlaneGeometry( 210, 210, 210 );
+        var geometry = new THREE.PlaneGeometry( 210, 210, 110 );
         var material = new THREE.MeshPhongMaterial( {color: 0x000000} );
         var plane = new THREE.Mesh( geometry, material );
         plane.position.set( 0, 0, 0 );
@@ -148,7 +148,7 @@
         const all = new THREE.Group();
         all.add(plane);//のりを追加
         all.add(cylinder); // 本体を追加
-        all.position.set(0,0,0);//全体グループの原点の位置
+        all.position.set(0,100,0);//全体グループの原点の位置
         scene.add(all); 
 
         update();
