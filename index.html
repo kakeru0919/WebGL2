@@ -38,7 +38,7 @@
         scene.add(directionalLight);
 
         //平面を作成
-        var planeGeometry = new THREE.PlaneGeometry(1000,1000,20,20);//　縦、横、分割数、分割数
+        var planeGeometry = new THREE.PlaneGeometry(10000,10000,20,20);//　縦、横、分割数、分割数
         var planeMaterial = new THREE.MeshBasicMaterial({color: 0x875C44});
         var plane = new THREE.Mesh(planeGeometry,planeMaterial);
         plane.rotation.set( -Math.PI/2, 0, 0 );
