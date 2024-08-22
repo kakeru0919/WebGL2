@@ -1,160 +1,99 @@
 <!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r127/three.min.js"></script>
+    <script>
+      // ページの読み込みを待つ
+      window.addEventListener('load', init);
 
-<html>
+      function init() {
+        // サイズを指定
+        const width = 960;
+        const height = 540;
+        let rot = 0;
 
-<head>
-  <title>タグ</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
-  <script src="OrbitControls.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
-<style>
-body {
-  /* set margin to 0 and overflow to hidden, to go fullscreen */
-  margin: 0;
-  overflow: hidden;
-}
-</style>
-</head>
-<body>
+        // レンダラーを作成
+        const renderer = new THREE.WebGLRenderer({
+          canvas: document.querySelector('#myCanvas'),
+        });
+        renderer.setSize(width, height);
 
-  <div id="Stats-output">
-</div>
-<!-- Div which will hold the Output -->
-<div id="webgl-output">
-</div>
+        // シーンを作成
+        const scene = new THREE.Scene();
 
-<!-- Javascript code that runs our Three.js examples -->
-<script type="text/javascript">
+        // カメラを作成
+        const camera = new THREE.PerspectiveCamera(45, width / height);
 
+        // 平行光源を作成
+        const directionalLight = new THREE.DirectionalLight(0xffffff);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
 
-const IMAGE_DATA = [
-   // src, width, height, posX, posY, posZ
-  ["sun.png", 50, 50, 0, 0, 0],
-  ["star.png", 15, 12, 50, 0, 0],
-  ["star.png", 15, 12, 50, 50, 0],
-  ["star.png", 15, 12, -50, 10, 50],
-  ["star.png", 15, 12, -50, 10, -50],
-];
+        // マテリアルを作成
+        const material = new THREE.MeshStandardMaterial({
+          map: new THREE.TextureLoader().load('img/earth.png'),
+          side: THREE.DoubleSide,
+        });
 
+        // 球体の形状を作成します
+        const geometry = new THREE.SphereGeometry(300, 30, 30);
+        // 形状とマテリアルからメッシュを作成します
+        const earthMesh = new THREE.Mesh(geometry, material);
+        // シーンにメッシュを追加します
+        scene.add(earthMesh);
 
-class Sample {
+        // 星屑を作成します (カメラの動きをわかりやすくするため)
+        createStarField();
 
-  constructor (opts = {}) {
+        /** 星屑を作成します */
+        function createStarField() {
+          // 頂点情報を作詞絵
+          const vertices = [];
+          for (let i = 0; i < 1000; i++) {
+            const x = 3000 * (Math.random() - 0.5);
+            const y = 3000 * (Math.random() - 0.5);
+            const z = 3000 * (Math.random() - 0.5);
 
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
-    this.output = opts.output || document.createElement('div');
+            vertices.push(x, y, z);
+          }
 
-    this.degree = 0;
+          // 形状データを作成
+          const geometry = new THREE.BufferGeometry();
+          geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
 
-    this.init();
-  }
+          // マテリアルを作成
+          const material = new THREE.PointsMaterial({
+            size: 10,
+            color: 0xffffff,
+          });
 
-  init () {
-    { // renderer
-      this.renderer = new THREE.WebGLRenderer({ antialias: true });
-      this.renderer.setClearColor( 0x222222 ); // 背景色
-      this.renderer.setPixelRatio(window.devicePixelRatio || 1);
-      this.renderer.setSize( this.width, this.height );
-      this.output.appendChild( this.renderer.domElement );
-    }
-    { // scene
-      this.scene = new THREE.Scene();
-    }
-    { // lights
-      const ambientLight = new THREE.AmbientLight(0xffffff);
-      this.scene.add(ambientLight);
-    }
-    { // camera
-      const perscamera = new THREE.PerspectiveCamera( 45, this.width / this.height, 1, 10000 ); // fov(視野角),aspect,near,far
-      const orthocamera = new THREE.OrthographicCamera( this.width / -2, this.width / 2, this.height / 2, this.height / -2, 1, 10000 );
-      this.camera = perscamera;
-      this.camera.position.set( 100, 100, 100 );
-      this.camera.lookAt( this.scene.position );
-    }
-    { // helper
-      const gridHelper = new THREE.GridHelper(200,50); // size, step
-      this.scene.add(gridHelper);
-      const axisHelper = new THREE.AxisHelper(200,50);
-      this.scene.add(axisHelper);
-    }
-    { // controls
-      this.controls = new THREE.OrbitControls(this.camera);
-      this.controls.autoRotate = true;
-    }
-    { // texture
-      this.arr = [];
-      for (let [i, src] of IMAGE_DATA.entries()) {
-        const d = IMAGE_DATA[i];
-        const mesh = this.createMesh(d[0], d[1], d[2], d[3], d[4], d[5]);
-        this.scene.add(mesh);
-        this.arr.push(mesh);
+          // 物体を作成
+          const mesh = new THREE.Points(geometry, material);
+          scene.add(mesh);
+        }
+
+        tick();
+
+        // 毎フレーム時に実行されるループイベントです
+        function tick() {
+          rot += 0.5; // 毎フレーム角度を0.5度ずつ足していく
+          // ラジアンに変換する
+          const radian = (rot * Math.PI) / 180;
+          // 角度に応じてカメラの位置を設定
+          camera.position.x = 1000 * Math.sin(radian);
+          camera.position.z = 1000 * Math.cos(radian);
+          // 原点方向を見つめる
+          camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+          // レンダリング
+          renderer.render(scene, camera);
+
+          requestAnimationFrame(tick);
+        }
       }
-    }
-
-    this.render();
-    window.addEventListener('resize', () => {
-        this.onResize();
-    }, false);
-
-  }
-
-  render () {
-    requestAnimationFrame( () => {
-      this.render();
-    });
-    this.controls.update();
-    this.renderer.render( this.scene, this.camera );
-
-    // カメラの向きに回転
-    for (let val of this.arr) {
-      // val.quaternion.copy(this.camera.quaternion);
-      val.rotation.setFromRotationMatrix(this.camera.matrix);
-    }
-
-  }
-
-
-  createMesh (src, width, height, posX, posY, posZ) {
-    const geom = new THREE.PlaneGeometry(width,height,20);
-    const PATH = './img/';
-    const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load(PATH + src);
-    const mat = new THREE.MeshBasicMaterial({transparent:true});
-    mat.map = texture;
-
-    const mesh = new THREE.Mesh(geom, mat);
-    mesh.position.set(posX, posY, posZ);
-
-    return mesh;
-  }
-
-  onResize () {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize( window.innerWidth, window.innerHeight );
-  }
-
-}
-
-
-
-(() => {
-
-  const sample = new Sample({
-    output: document.getElementById('webgl-output')
-  });
-
-})();
-
-
-
-
-
-
-
-
-</script>
-</body>
-</html>
+    </script>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+  </body>
