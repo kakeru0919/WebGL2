@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r127/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
     <script>
       // ページの読み込みを待つ
       window.addEventListener('load', init);
@@ -24,6 +25,9 @@
 
         // カメラを作成
         const camera = new THREE.PerspectiveCamera(45, width / height);
+        
+        // カメラコントローラーを作成
+        const controls = new THREE.OrbitControls(camera, document.body);
 
         // 平行光源を作成
         const directionalLight = new THREE.DirectionalLight(0xffffff);
@@ -72,7 +76,8 @@
           const mesh = new THREE.Points(geometry, material);
           scene.add(mesh);
         }
-
+        
+        /*
         tick();
 
         // 毎フレーム時に実行されるループイベントです
@@ -91,7 +96,9 @@
 
           requestAnimationFrame(tick);
         }
+        */
       }
+      
     </script>
   </head>
   <body>
