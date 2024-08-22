@@ -136,7 +136,13 @@
         cylinder.position.set( 300, 100, -5 );
         scene.add( cylinder );
         cylinder.rotation.x = -1.57;;
-        //cylinder.rotation.y = 0.3925;;
+
+        // 平面を作成
+        var geometry = new THREE.PlaneGeometry( 210, 100, 100 );
+        var material = new THREE.MeshPhongMaterial( {color: 0x0000ff} );
+        var plane = new THREE.Mesh( geometry, material );
+        plane.position.z = -5;
+        scene.add( plane );
 
         update();
 
