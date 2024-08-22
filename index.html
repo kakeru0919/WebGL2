@@ -4,7 +4,7 @@
     <title>サンプル</title>
     <meta charset="utf-8" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r127/three.min.js"></script>
-    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+    //<script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
     <script>
       // ページの読み込みを待つ
       window.addEventListener('load', init);
@@ -27,7 +27,7 @@
         // カメラを作成
         const camera = new THREE.PerspectiveCamera(45, width / height);
         // カメラの初期座標を設定
-        camera.position.set(1000, 1000, 1000);
+        //camera.position.set(1000, 1000, 1000);
 
         // カメラコントローラーを作成
         const controls = new THREE.OrbitControls(camera, document.body);
