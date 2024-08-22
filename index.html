@@ -138,12 +138,13 @@
         cylinder.rotation.x = -1.57;;
 
         //角柱〜円柱
-        var cylinderGeometry2 = new THREE.CylinderGeometry( 70, 70, 105, 4 );
+        var cylinderGeometry2 = new THREE.CylinderGeometry( 100, 100, 105, 4 );
         var cylinderMaterial2 = new THREE.MeshPhongMaterial( {color: 0x000000} );
         var cylinder2 = new THREE.Mesh( cylinderGeometry2, cylinderMaterial2 );
         cylinder2.position.set( 0, 0, 0 );
         scene.add( cylinder2 );
         cylinder2.rotation.x = -1.57;;
+        cylinder2.rotation.z = -0.3925;;
 
          //全体のオブジェクト
         const all = new THREE.Group();
