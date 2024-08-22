@@ -21,8 +21,6 @@
         });
         renderer.setSize(width, height);
 
-        
-
         // シーンを作成
         const scene = new THREE.Scene();
 
@@ -38,6 +36,14 @@
         const directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 1, 1);
         scene.add(directionalLight);
+
+        //平面を作成
+        var planeGeometry = new THREE.PlaneGeometry(1000,1000,20,20);//　縦、横、分割数、分割数
+        var planeMaterial = new THREE.MeshBasicMaterial({color: 0x875C44});
+        var plane = new THREE.Mesh(planeGeometry,planeMaterial);
+        plane.rotation.set( -Math.PI/2, 0, 0 );
+        plane.position.set(0,0,0);
+        scene.add(plane);
 
         // マテリアルを作成
         const earth_m = new THREE.MeshStandardMaterial({
@@ -85,13 +91,14 @@
         sun.scale.set(500,500,500);
         scene.add(sun);
         
-         update();
+        update();
 
         // 毎フレーム時に実行されるループイベント
         function update() {
           // レンダリング
           renderer.render(scene, camera);
           requestAnimationFrame(update);
+          
         }
       }
     </script>
