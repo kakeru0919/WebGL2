@@ -128,7 +128,14 @@
         tree4.position.set(-400,250,100);
         tree4.scale.set(500,500,500);
         scene.add(tree4);
-        
+
+        //角柱〜円柱
+        var cylinderGeometry = new THREE.CylinderGeometry( 50, 50, 100, 3 );
+        var cylinderMaterial = new THREE.MeshPhongMaterial( {color: 0x0000ff} );
+        var cylinder = new THREE.Mesh( cylinderGeometry, cylinderMaterial );
+        cylinder.position.set( 0, 0, -5 );
+        scene.add( cylinder );
+
         update();
 
         // 毎フレーム時に実行されるループイベント
